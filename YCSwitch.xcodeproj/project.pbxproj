@@ -13,6 +13,7 @@
 		135C3D2D1D7060F400CF05E5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 135C3D2B1D7060F400CF05E5 /* Main.storyboard */; };
 		135C3D2F1D7060F400CF05E5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 135C3D2E1D7060F400CF05E5 /* Assets.xcassets */; };
 		135C3D321D7060F400CF05E5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 135C3D301D7060F400CF05E5 /* LaunchScreen.storyboard */; };
+		135C3D411D70646700CF05E5 /* YCSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 135C3D401D70646700CF05E5 /* YCSwitch.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,8 @@
 		135C3D2E1D7060F400CF05E5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		135C3D311D7060F400CF05E5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		135C3D331D7060F400CF05E5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		135C3D3F1D70646700CF05E5 /* YCSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YCSwitch.h; sourceTree = "<group>"; };
+		135C3D401D70646700CF05E5 /* YCSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YCSwitch.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +65,7 @@
 				135C3D261D7060F400CF05E5 /* AppDelegate.m */,
 				135C3D281D7060F400CF05E5 /* ViewController.h */,
 				135C3D291D7060F400CF05E5 /* ViewController.m */,
+				135C3D3E1D70646700CF05E5 /* Classes */,
 				135C3D2B1D7060F400CF05E5 /* Main.storyboard */,
 				135C3D2E1D7060F400CF05E5 /* Assets.xcassets */,
 				135C3D301D7060F400CF05E5 /* LaunchScreen.storyboard */,
@@ -77,6 +81,15 @@
 				135C3D231D7060F400CF05E5 /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		135C3D3E1D70646700CF05E5 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				135C3D3F1D70646700CF05E5 /* YCSwitch.h */,
+				135C3D401D70646700CF05E5 /* YCSwitch.m */,
+			);
+			path = Classes;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -152,6 +165,7 @@
 				135C3D2A1D7060F400CF05E5 /* ViewController.m in Sources */,
 				135C3D271D7060F400CF05E5 /* AppDelegate.m in Sources */,
 				135C3D241D7060F400CF05E5 /* main.m in Sources */,
+				135C3D411D70646700CF05E5 /* YCSwitch.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -302,6 +316,7 @@
 				135C3D381D7060F400CF05E5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
