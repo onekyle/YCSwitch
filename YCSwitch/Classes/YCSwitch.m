@@ -44,7 +44,7 @@
     
     self = [super initWithFrame:frame];
     self.track = [[UIView alloc] initWithFrame:trackFrame];
-    self.track.backgroundColor = [UIColor grayColor];
+    self.track.backgroundColor = _trackOffTintColor;
     self.track.layer.cornerRadius = MIN(self.track.frame.size.height, self.track.frame.size.width)/2;
     [self addSubview:self.track];
 
@@ -75,7 +75,7 @@
     UITapGestureRecognizer *singleTap =
     [[UITapGestureRecognizer alloc] initWithTarget:self
                                             action:@selector(switchAreaTapped:)];
-    [self addGestureRecognizer:singleTap];
+    [self.track addGestureRecognizer:singleTap];
     
     return self;
 

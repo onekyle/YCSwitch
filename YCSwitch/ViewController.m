@@ -7,16 +7,18 @@
 //
 
 #import "ViewController.h"
+#import "YCSwitch.h"
 
 @interface ViewController ()
-
+@property (nonatomic,strong) YCSwitch *ycSwitch;
 @end
 
 @implementation ViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+    _ycSwitch = [[YCSwitch alloc] initWithFrame:CGRectMake(100, 100, 90, 40) thumbSize:CGSizeMake(52, 34) trackThickHeight:26];
+    [self.view addSubview:_ycSwitch];
 }
 
 - (void)didReceiveMemoryWarning {
