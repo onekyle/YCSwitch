@@ -44,7 +44,7 @@
 
 // This method sets handler block that is getting called right before the switcher starts animating the transition
 
-- (void)setWillBePressedHandler:(void (^)(BOOL isOn))handler;
+- (void)setWillBePressedHandler:(void (^)(BOOL statusWillBe))handler;
 /**
  *  Set switch state with or without moving animation of switch thumb
  *

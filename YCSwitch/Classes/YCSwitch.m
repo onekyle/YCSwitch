@@ -16,7 +16,7 @@
 }
 
 @property (copy, nonatomic) void (^handlerBlock)(BOOL isOn);
-@property (copy, nonatomic) void (^willBePressedHandlerBlock)(BOOL isOn);
+@property (copy, nonatomic) void (^willBePressedHandlerBlock)(BOOL statusWillBe);
 
 @end
 
@@ -126,8 +126,8 @@
 {
     // will pressed
     if (_willBePressedHandlerBlock) {
-        BOOL isOn = self.isOn;
-        _willBePressedHandlerBlock(isOn);
+        BOOL statusWillBe = !self.isOn;
+        _willBePressedHandlerBlock(statusWillBe);
     }
 }
 
@@ -136,8 +136,8 @@
 {
     // Delegate method
     if (_willBePressedHandlerBlock) {
-        BOOL isOn = self.isOn;
-        _willBePressedHandlerBlock(isOn);
+        BOOL statusWillBe = !self.isOn;
+        _willBePressedHandlerBlock(statusWillBe);
     }
     [self changeThumbState];
 }
@@ -314,11 +314,6 @@
     //    if (self.isEnabled == YES) {
     self.switchThumb.selected = YES;
     self.track.backgroundColor = self.trackOnTintColor;
-    //    }
-    //    else {
-    //        self.switchThumb.backgroundColor = self.thumbDisabledTintColor;
-    //        self.track.backgroundColor = self.trackDisabledTintColor;
-    //    }
     
     if (self.isOn == NO) {
         self.isOn = YES;
@@ -341,11 +336,6 @@
     //    if (self.isEnabled == YES) {
     self.switchThumb.selected = NO;
     self.track.backgroundColor = self.trackOffTintColor;
-    //    }
-    //    else {
-    //        self.switchThumb.backgroundColor = self.thumbDisabledTintColor;
-    //        self.track.backgroundColor = self.trackDisabledTintColor;
-    //    }
     
     if (self.isOn == YES) {
         self.isOn = NO;

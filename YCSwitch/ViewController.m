@@ -18,6 +18,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     _ycSwitch = [[YCSwitch alloc] initWithFrame:CGRectMake(100, 100, 90, 40) thumbSize:CGSizeMake(52, 34) trackThickHeight:26];
+    [_ycSwitch setWillBePressedHandler:^(BOOL statusWillBe) {
+        NSLog(@"willBeOn: %d",statusWillBe);
+    }];
     [self.view addSubview:_ycSwitch];
 }
 
