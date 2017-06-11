@@ -30,7 +30,9 @@
 /** An UIColor property to represent the colour of the track when position is OFF */
 @property (nonatomic, strong) UIColor *trackOffTintColor;
 
-
+#pragma Size
+@property (nonatomic,assign) CGSize thumbSize;
+@property (nonatomic,assign) CGFloat trackThickHeight;
 #pragma UI components
 /** An UIButton object that represents current state(ON/OFF) */
 @property (nonatomic, strong) UIButton *switchThumb;
@@ -44,7 +46,7 @@
 
 // This method sets handler block that is getting called right before the switcher starts animating the transition
 
-- (void)setWillBePressedHandler:(void (^)(BOOL statusWillBe))handler;
+- (void)setWillBePressedHandler:(void (^)(BOOL isOn))handler;
 /**
  *  Set switch state with or without moving animation of switch thumb
  *
@@ -53,5 +55,5 @@
  */
 - (void)setOn:(BOOL)on animated:(BOOL)animated;
 
-- (id)initWithFrame:(CGRect)frame thumbSize:(CGSize)thumbSize trackThickHeight:(CGFloat)trackThickHeight;
+- (instancetype)initWithFrame:(CGRect)frame thumbSize:(CGSize)thumbSize trackThickHeight:(CGFloat)trackThickHeight;
 @end

@@ -8,20 +8,119 @@
 
 #import "YCSwitch.h"
 
+@interface YCTrackGradient : CAGradientLayer
+@property (nonatomic,strong) NSArray *onColors;
+@property (nonatomic,strong) NSArray *offColors;
+@property (nonatomic,strong) CAShapeLayer *shadowLayer;
+-(void) changeTrackStatus:(BOOL)isOn;
+@end
+
+@implementation YCTrackGradient
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _onColors = @[(id)[UIColor colorWithRed:208/255.0 green:62/255.0 blue:159/255.0 alpha:1.0].CGColor,(id)[UIColor colorWithRed:186/255.0 green:83/255.0 blue:233/255.0 alpha:1.0].CGColor];
+        _offColors = @[(id)[UIColor colorWithRed:97/255.0 green:101/255.0 blue:178/255.0 alpha:1.0].CGColor,(id)[UIColor colorWithRed:18/255.0 green:147/255.0 blue:178/255.0 alpha:1.0].CGColor];
+        self.colors = _offColors;
+        self.startPoint = CGPointMake(0, 0);
+        self.endPoint = CGPointMake(0, 1);
+        //        _trackGradient.cornerRadius = MIN(self.track.frame.size.height, self.track.frame.size.width)/2;
+        self.masksToBounds = YES;
+        
+        _shadowLayer = [CAShapeLayer layer];
+        
+        // Standard shadow stuff
+        _shadowLayer.shadowColor = [UIColor colorWithWhite:0 alpha:1].CGColor;
+        _shadowLayer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+        _shadowLayer.shadowOpacity = 1.0f;
+        _shadowLayer.shadowRadius = 5;
+        
+        // Causes the inner region in this example to NOT be filled.
+        _shadowLayer.fillRule = kCAFillRuleEvenOdd;
+        //    [_shadowLayer addSublayer:_trackGradient];
+        [self addSublayer:_shadowLayer];
+    }
+    return self;
+}
+
+-(void)layoutSublayers
+{
+    [super layoutSublayers];
+    self.cornerRadius = MIN(self.frame.size.height, self.frame.size.width)/2;
+    CGFloat transulantRadius = 5;
+    CGRect largerRect = CGRectMake(self.bounds.origin.x - transulantRadius,
+                                   self.bounds.origin.y - transulantRadius,
+                                   self.bounds.size.width + transulantRadius + transulantRadius,
+                                   self.bounds.size.height + transulantRadius + transulantRadius);
+    
+    // Create the larger rectangle path.
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGPathAddRect(path, NULL, largerRect);
+    
+    // Add the inner path so it's subtracted from the outer path.
+    // someInnerPath could be a simple bounds rect, or maybe
+    // a rounded one for some extra fanciness.
+    CGFloat cornerRadius = self.cornerRadius;
+    UIBezierPath *bezier;
+    if (cornerRadius) {
+        bezier = [UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:cornerRadius];
+    } else {
+        bezier = [UIBezierPath bezierPathWithRect:self.bounds];
+    }
+    CGPathAddPath(path, NULL, bezier.CGPath);
+    CGPathCloseSubpath(path);
+    
+    _shadowLayer.path = path;
+    
+    CGPathRelease(path);
+    
+}
+
+-(void) changeTrackStatus:(BOOL)isOn
+{
+    self.colors = isOn ? _onColors : _offColors;
+}
+
+@end
+
 @interface YCSwitch ()
 {
     float thumbOnPosition;
     float thumbOffPosition;
     float bounceOffset;
+    YCTrackGradient *_trackGradient;
 }
 
 @property (copy, nonatomic) void (^handlerBlock)(BOOL isOn);
-@property (copy, nonatomic) void (^willBePressedHandlerBlock)(BOOL statusWillBe);
+@property (copy, nonatomic) void (^willBePressedHandlerBlock)(BOOL isOn);
 
 @end
 
 @implementation YCSwitch
-- (id)initWithFrame:(CGRect)frame thumbSize:(CGSize)thumbSize trackThickHeight:(CGFloat)trackThickHeight
+
+- (instancetype)initWithFrame:(CGRect)frame thumbSize:(CGSize)thumbSize trackThickHeight:(CGFloat)trackThickHeight
+{
+    if (self = [super init]) {
+        [self setupSwitch];
+        self.frame = frame;
+        self.thumbSize = thumbSize;
+        self.trackThickHeight = trackThickHeight;
+    }
+    return self;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        [self setupSwitch];
+    }
+    return self;
+}
+
+-(void) setupSwitch
 {
     _trackOnTintColor = [UIColor purpleColor];
     _trackOffTintColor = [UIColor cyanColor];
@@ -31,31 +130,18 @@
     self.isBounceEnabled = YES;
     bounceOffset = 3.0;
     
-    CGRect trackFrame = CGRectZero;
-    CGRect thumbFrame = CGRectZero;
     
-    trackFrame.size.width = frame.size.width;
-    trackFrame.size.height = trackThickHeight;
-    trackFrame.origin.x = 0.0;
-    trackFrame.origin.y = (frame.size.height-trackThickHeight)/2;
-    thumbFrame.size = thumbSize;
-    thumbFrame.origin.x = 0.0;
-    thumbFrame.origin.y = (frame.size.height-thumbSize.height)/2;
+    self.track = [[UIView alloc] init]; //WithFrame:trackFrame];
     
-    self = [super initWithFrame:frame];
-    self.track = [[UIView alloc] initWithFrame:trackFrame];
-    self.track.backgroundColor = _trackOffTintColor;
-    self.track.layer.cornerRadius = MIN(self.track.frame.size.height, self.track.frame.size.width)/2;
-    [self addSubview:self.track];
+    _trackGradient = [YCTrackGradient layer];
+    
+    [self.track.layer addSublayer:_trackGradient];
+    
 
-    self.switchThumb = [[UIButton alloc] initWithFrame:thumbFrame];
-//    self.switchThumb.backgroundColor = [UIColor whiteColor];
-//    self.switchThumb.layer.cornerRadius = self.switchThumb.frame.size.height/2;
-//    self.switchThumb.layer.shadowOpacity = 0.5;
-//    self.switchThumb.layer.shadowOffset = CGSizeMake(0.0, 1.0);
-//    self.switchThumb.layer.shadowColor = [UIColor blackColor].CGColor;
-//    self.switchThumb.layer.shadowRadius = 2.0f;
-    // Add events for user action
+    [self addSubview:self.track];
+    
+    self.switchThumb = [[UIButton alloc] init ];// WithFrame:thumbFrame];
+
     [self.switchThumb addTarget:self action:@selector(onTouchDown:withEvent:) forControlEvents:UIControlEventTouchDown];
     [self.switchThumb addTarget:self action:@selector(onTouchUpOutsideOrCanceled:withEvent:) forControlEvents:UIControlEventTouchUpOutside];
     [self.switchThumb addTarget:self action:@selector(switchThumbTapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -65,20 +151,36 @@
     
     [self addSubview:self.switchThumb];
     
-    thumbOnPosition = self.frame.size.width - self.switchThumb.frame.size.width;
-    thumbOffPosition = self.switchThumb.frame.origin.x;
+    
     
     self.isOn = NO;
     [self.switchThumb setImage:_thumbOffImage forState:UIControlStateNormal];
     [self.switchThumb setImage:_thumbOnImage forState:UIControlStateSelected];
     
-    UITapGestureRecognizer *singleTap =
-    [[UITapGestureRecognizer alloc] initWithTarget:self
-                                            action:@selector(switchAreaTapped:)];
+    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(switchAreaTapped:)];
     [self.track addGestureRecognizer:singleTap];
-    
-    return self;
+}
 
+-(void)layoutSubviews
+{
+    [super layoutSubviews];
+    CGRect frame = self.frame;
+    CGRect trackFrame = CGRectZero;
+    CGRect thumbFrame = CGRectZero;
+    
+    trackFrame.size.width = frame.size.width;
+    trackFrame.size.height = _trackThickHeight;
+    trackFrame.origin.x = 0.0;
+    trackFrame.origin.y = (frame.size.height-_trackThickHeight)/2;
+    thumbFrame.size = _thumbSize;
+    thumbFrame.origin.x = 0.0;
+    thumbFrame.origin.y = (frame.size.height-_thumbSize.height)/2;
+    self.track.frame = trackFrame;
+    _trackGradient.frame = self.track.bounds;
+    self.switchThumb.frame = thumbFrame;
+    //    self.track.layer.cornerRadius = MIN(self.track.frame.size.height, self.track.frame.size.width)/2;
+    thumbOnPosition = self.frame.size.width - self.switchThumb.frame.size.width;
+    thumbOffPosition = self.switchThumb.frame.origin.x;
 }
 
 -(void)setPressedHandler:(void (^)(BOOL))handler
@@ -126,8 +228,8 @@
 {
     // will pressed
     if (_willBePressedHandlerBlock) {
-        BOOL statusWillBe = !self.isOn;
-        _willBePressedHandlerBlock(statusWillBe);
+        BOOL isOn = self.isOn;
+        _willBePressedHandlerBlock(isOn);
     }
 }
 
@@ -136,8 +238,8 @@
 {
     // Delegate method
     if (_willBePressedHandlerBlock) {
-        BOOL statusWillBe = !self.isOn;
-        _willBePressedHandlerBlock(statusWillBe);
+        BOOL isOn = self.isOn;
+        _willBePressedHandlerBlock(isOn);
     }
     [self changeThumbState];
 }
@@ -213,16 +315,17 @@
 - (void)changeThumbStateONwithAnimation
 {
     // switch movement animation
-    [UIView animateWithDuration:0.15f
+    [UIView animateWithDuration:0.25f
                           delay:0.05f
-                        options:UIViewAnimationOptionCurveEaseInOut
+                        options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
                          CGRect thumbFrame = self.switchThumb.frame;
                          thumbFrame.origin.x = thumbOnPosition+bounceOffset;
                          self.switchThumb.frame = thumbFrame;
                          //                         if (self.isEnabled == YES) {
                          self.switchThumb.selected = YES;
-                         self.track.backgroundColor = self.trackOnTintColor;
+                         [_trackGradient changeTrackStatus:YES];
+                         //                         self.track.backgroundColor = self.trackOnTintColor;
                          //                         }
                          //                         else {
                          //                             self.switchThumb.backgroundColor = self.thumbDisabledTintColor;
@@ -240,7 +343,7 @@
                          // NSLog(@"now isOn: %d", self.isOn);
                          // NSLog(@"thumb end pos: %@", NSStringFromCGRect(self.switchThumb.frame));
                          // Bouncing effect: Move thumb a bit, for better UX
-                         [UIView animateWithDuration:0.15f
+                         [UIView animateWithDuration:0.25f
                                           animations:^{
                                               // Bounce to the position
                                               CGRect thumbFrame = self.switchThumb.frame;
@@ -260,16 +363,17 @@
 - (void)changeThumbStateOFFwithAnimation
 {
     // switch movement animation
-    [UIView animateWithDuration:0.15f
+    [UIView animateWithDuration:0.25f
                           delay:0.05f
-                        options:UIViewAnimationOptionCurveEaseInOut
+                        options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
                          CGRect thumbFrame = self.switchThumb.frame;
                          thumbFrame.origin.x = thumbOffPosition-bounceOffset;
                          self.switchThumb.frame = thumbFrame;
                          //                         if (self.isEnabled == YES) {
                          self.switchThumb.selected = NO;
-                         self.track.backgroundColor = self.trackOffTintColor;
+                         [_trackGradient changeTrackStatus:NO];
+                         //                         self.track.backgroundColor = self.trackOffTintColor;
                          //                         }
                          //                         else {
                          //                             self.switchThumb.backgroundColor = self.thumbDisabledTintColor;
@@ -287,7 +391,7 @@
                          // NSLog(@"now isOn: %d", self.isOn);
                          // NSLog(@"thumb end pos: %@", NSStringFromCGRect(self.switchThumb.frame));
                          // Bouncing effect: Move thumb a bit, for better UX
-                         [UIView animateWithDuration:0.15f
+                         [UIView animateWithDuration:0.25f
                                           animations:^{
                                               // Bounce to the position
                                               CGRect thumbFrame = self.switchThumb.frame;
@@ -300,7 +404,7 @@
                                                   BOOL isOn = self.isOn;
                                                   _handlerBlock(isOn);
                                               }
-
+                                              
                                           }];
                      }];
 }
@@ -313,7 +417,13 @@
     self.switchThumb.frame = thumbFrame;
     //    if (self.isEnabled == YES) {
     self.switchThumb.selected = YES;
-    self.track.backgroundColor = self.trackOnTintColor;
+    [_trackGradient changeTrackStatus:YES];
+    //    self.track.backgroundColor = self.trackOnTintColor;
+    //    }
+    //    else {
+    //        self.switchThumb.backgroundColor = self.thumbDisabledTintColor;
+    //        self.track.backgroundColor = self.trackDisabledTintColor;
+    //    }
     
     if (self.isOn == NO) {
         self.isOn = YES;
@@ -324,7 +434,7 @@
         BOOL isOn = self.isOn;
         _handlerBlock(isOn);
     }
-
+    
 }
 
 // Without animation
@@ -335,7 +445,13 @@
     self.switchThumb.frame = thumbFrame;
     //    if (self.isEnabled == YES) {
     self.switchThumb.selected = NO;
-    self.track.backgroundColor = self.trackOffTintColor;
+    [_trackGradient changeTrackStatus:NO];
+    //    self.track.backgroundColor = self.trackOffTintColor;
+    //    }
+    //    else {
+    //        self.switchThumb.backgroundColor = self.thumbDisabledTintColor;
+    //        self.track.backgroundColor = self.trackDisabledTintColor;
+    //    }
     
     if (self.isOn == YES) {
         self.isOn = NO;

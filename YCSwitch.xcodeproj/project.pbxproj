@@ -123,6 +123,8 @@
 				TargetAttributes = {
 					135C3D1E1D7060F400CF05E5 = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = G29F95377T;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -279,10 +281,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = G29F95377T;
 				INFOPLIST_FILE = YCSwitch/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Durand.YCSwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "d7461bcc-d7b8-46af-a1bc-a1c7c9cc7792";
+				PROVISIONING_PROFILE_SPECIFIER = developerAll;
 			};
 			name = Debug;
 		};
@@ -290,10 +295,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = G29F95377T;
 				INFOPLIST_FILE = YCSwitch/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Durand.YCSwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "d7461bcc-d7b8-46af-a1bc-a1c7c9cc7792";
+				PROVISIONING_PROFILE_SPECIFIER = developerAll;
 			};
 			name = Release;
 		};
