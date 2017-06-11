@@ -12,11 +12,11 @@
 
 #pragma State
 /** A Boolean value that represents switch's current state(ON/OFF). YES to ON, NO to OFF the switch */
-@property (nonatomic) BOOL isOn;
+@property (nonatomic, assign) BOOL isOn;
 /** A Boolean value that represents switch's interaction mode. YES to set enabled, No to set disabled*/
-@property (nonatomic) BOOL isEnabled;
+@property (nonatomic, assign, getter=isEnabled) BOOL enabled;
 /** A Boolean value whether the bounce animation effect is enabled when state change movement */
-@property (nonatomic) BOOL isBounceEnabled;
+@property (nonatomic, assign, getter=isBounceEnabled) BOOL bounceEnabled;
 
 #pragma Image
 /** An UIImage property to represent the UIImage of the switch thumb when position is ON */
@@ -31,8 +31,8 @@
 @property (nonatomic, strong) UIColor *trackOffTintColor;
 
 #pragma Size
-@property (nonatomic,assign) CGSize thumbSize;
-@property (nonatomic,assign) CGFloat trackThickHeight;
+@property (nonatomic, assign) CGSize thumbSize;
+@property (nonatomic, assign) CGFloat trackThickHeight;
 #pragma UI components
 /** An UIButton object that represents current state(ON/OFF) */
 @property (nonatomic, strong) UIButton *switchThumb;

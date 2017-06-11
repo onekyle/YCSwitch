@@ -126,8 +126,8 @@
     _trackOffTintColor = [UIColor cyanColor];
     _thumbOnImage = [UIImage imageNamed:@"录音_switch"];
     _thumbOffImage = [UIImage imageNamed:@"录音_switch"];
-    self.isEnabled = YES;
-    self.isBounceEnabled = YES;
+    self.enabled = YES;
+    self.bounceEnabled = YES;
     bounceOffset = 3.0;
     
     
